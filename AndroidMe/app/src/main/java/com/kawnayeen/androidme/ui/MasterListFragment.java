@@ -1,5 +1,6 @@
 package com.kawnayeen.androidme.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,8 @@ import com.kawnayeen.androidme.data.AndroidImageAssets;
  */
 public class MasterListFragment extends Fragment {
 
+    OnImageClickListener callBack;
+
     public MasterListFragment() {
     }
 
@@ -26,6 +29,21 @@ public class MasterListFragment extends Fragment {
         GridView gridView = rootView.findViewById(R.id.images_grid_view);
         MasterListAdapter masterListAdapter = new MasterListAdapter(getContext(), AndroidImageAssets.getAll());
         gridView.setAdapter(masterListAdapter);
+        gridView.setOnItemClickListener((adapterView, view, position, l) -> callBack.onImageSelected(position));
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callBack = (OnImageClickListener) context;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public interface OnImageClickListener {
+        void onImageSelected(int position);
     }
 }
